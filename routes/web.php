@@ -16,3 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('home');
 });
+
+
+Route::group( ['namespace' => 'web'], function()
+{
+    //Route::resource('bookings', 'BookingController');
+
+Route::get('/', 'BookingController@create')->name('bookings.create');
+Route::post('/', 'BookingController@store')->name('bookings.store');
+
+});

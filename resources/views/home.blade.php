@@ -6,16 +6,17 @@
         <div class="col-md-6 col-sm-12">
             <div class="form-box">
                 <h1>Book Now!</h1>
-                <form action="" method="post">
+                <form enctype="multipart/form-data" method="POST" action="{{ route('bookings.store') }}" id="main-form">
+                    @csrf
                     <div class="form-group">
-                        <input class="form-control" id="name" type="text" name="Name" placeholder="Full Name"/>
+                        <input class="form-control" id="name" type="text" name="name" placeholder="Full Name"/>
                     </div>
                     <div class="form-group">
                         <input
                                 class="form-control"
                                 id="email"
                                 type="email"
-                                name="Email"
+                                name="email"
                                 placeholder="Email"
                         />
                     </div>
@@ -24,32 +25,17 @@
                                 class="form-control"
                                 id="phone"
                                 type="phone"
-                                name="Phone"
+                                name="phone"
                                 placeholder="Phone"
                         />
                     </div>
                     <div class="form-group">
-                        <div class="dropdown">
-                            <button
-                                    class="btn btn-secondary dropdown-toggle"
-                                    type="button"
-                                    id="dropdownMenuButton"
-                                    data-toggle="dropdown"
-                                    aria-haspopup="true"
-                                    aria-expanded="false"
-                            >
-                                Choose your room
-                            </button>
-                            <div
-                                    class="dropdown-menu"
-                                    aria-labelledby="dropdownMenuButton"
-                            >
-                                <a class="dropdown-item" href="#">Single Room</a>
-                                <a class="dropdown-item" href="#">Single Room With View</a>
-                                <a class="dropdown-item" href="#">Deluxe Room</a>
-                                <a class="dropdown-item" href="#">Sweet</a>
-                            </div>
-                        </div>
+                        <select name="booking_option_id" id="booking_option_id" class="form-control">
+                            <option value="">Choose your room</option>
+                            @foreach($options as $option)
+                                <option value="{{ $option->id }}">{{ $option->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="arrival">Arrival date</label>
@@ -57,7 +43,7 @@
                                 class="form-control"
                                 id="arrival"
                                 type="date"
-                                name="Arrival"
+                                name="arrival_date"
                         />
                     </div>
                     <div class="form-group">
@@ -66,7 +52,7 @@
                                 class="form-control"
                                 id="departure"
                                 type="date"
-                                name="Departure"
+                                name="departure_date"
                                 placeholder=""
                         />
                     </div>
@@ -75,20 +61,28 @@
                                 class="form-control"
                                 id="personNumber"
                                 type="number"
-                                name="PersonNumber"
+                                name="persons_num"
                                 placeholder="Count of persons"
                         />
                     </div>
+                        <div class="form-group">
+                            <button onclick="submitForm('#main-form')" id="submit-button"
+                                    class="btn btn-primary">Save</button>
+                            <button type="reset" onclick=""
+                                    class="btn btn-secondary">Close</button>
+                        </div>
+{{--                    <button class="btn btn-primary btn-lg btn-block" type="submit" >Add Book</button>--}}
                 </form>
             </div>
         </div>
         <div class="col-md-6 col-sm-12 mt-lg-3">
             <div class="text-center mt-lg-3 mb-lg-3">
                 <div class="alert alert-info" role="alert">
-                    Total of Booking : <span style="font-weight: bold;">25</span>
+                    Total of Booking : <span style="font-weight: bold;">{{ $count_of_bookings }}</span>
                 </div>
             </div>
             <div class="accordion" id="accordionExample">
+                @forelse($bookings as $booking)
                 <div class="card">
                     <div class="card-header" id="headingOne">
                         <h2 class="mb-0">
@@ -100,7 +94,7 @@
                                     aria-expanded="true"
                                     aria-controls="collapseOne"
                             >
-                                Booking #1
+                                Booking #{{ $booking->id }}
                             </button>
                         </h2>
                     </div>
@@ -113,91 +107,42 @@
                     >
                         <div class="card-body">
                             <ul class="list-group">
-                                <li class="list-group-item">Full Name:</li>
-                                <li class="list-group-item">Email:</li>
-                                <li class="list-group-item">Phone:</li>
-                                <li class="list-group-item">Date of arrival:</li>
-                                <li class="list-group-item">Date of departcher:</li>
-                                <li class="list-group-item">Number of persons:</li>
+                                <li class="list-group-item">Full Name: {{ $booking->user->name }}</li>
+                                <li class="list-group-item">Email: {{ $booking->user->email }}</li>
+                                <li class="list-group-item">Phone: {{ $booking->user->phone }}</li>
+                                <li class="list-group-item">Date of arrival: {{ $booking->arrival_date }}</li>
+                                <li class="list-group-item">Date of departcher: {{ $booking->departure_date }}</li>
+                                <li class="list-group-item">Number of persons: {{ $booking->persons_num }}</li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header" id="headingTwo">
+                @empty
+                    <div class="card-header" id="headingOne">
                         <h2 class="mb-0">
                             <button
-                                    class="btn btn-link btn-block text-left collapsed"
+                                    class="btn btn-link btn-block text-left"
                                     type="button"
                                     data-toggle="collapse"
-                                    data-target="#collapseTwo"
-                                    aria-expanded="false"
-                                    aria-controls="collapseTwo"
+                                    data-target="#collapseOne"
+                                    aria-expanded="true"
+                                    aria-controls="collapseOne"
                             >
-                                Collapsible Group Item #2
+                                There Isn't Any Book
                             </button>
                         </h2>
                     </div>
-                    <div
-                            id="collapseTwo"
-                            class="collapse"
-                            aria-labelledby="headingTwo"
-                            data-parent="#accordionExample"
-                    >
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life
-                            accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                            non cupidatat skateboard dolor brunch. Food truck quinoa
-                            nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt
-                            aliqua put a bird on it squid single-origin coffee nulla
-                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
-                            beer labore wes anderson cred nesciunt sapiente ea proident.
-                            Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
-                            beer farm-to-table, raw denim aesthetic synth nesciunt you
-                            probably haven't heard of them accusamus labore sustainable
-                            VHS.
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header" id="headingThree">
-                        <h2 class="mb-0">
-                            <button
-                                    class="btn btn-link btn-block text-left collapsed"
-                                    type="button"
-                                    data-toggle="collapse"
-                                    data-target="#collapseThree"
-                                    aria-expanded="false"
-                                    aria-controls="collapseThree"
-                            >
-                                Collapsible Group Item #3
-                            </button>
-                        </h2>
-                    </div>
-                    <div
-                            id="collapseThree"
-                            class="collapse"
-                            aria-labelledby="headingThree"
-                            data-parent="#accordionExample"
-                    >
-                        <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life
-                            accusamus terry richardson ad squid. 3 wolf moon officia aute,
-                            non cupidatat skateboard dolor brunch. Food truck quinoa
-                            nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt
-                            aliqua put a bird on it squid single-origin coffee nulla
-                            assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
-                            beer labore wes anderson cred nesciunt sapiente ea proident.
-                            Ad vegan excepteur butcher vice lomo. Leggings occaecat craft
-                            beer farm-to-table, raw denim aesthetic synth nesciunt you
-                            probably haven't heard of them accusamus labore sustainable
-                            VHS.
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </div>
 </div>
 
+@endsection
+@section('scripts')
+    <script>
+        function submitForm(id) {
+            $(id).submit();
+        }
+    </script>
 @endsection
