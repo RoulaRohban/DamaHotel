@@ -19,9 +19,10 @@ class CreateBookingsTable extends Migration
             $table->date('arrival_date');
             $table->date('departure_date');
             $table->integer('persons_num');
-            $table->float('total_cost');
+            $table->float('total_cost')->default('0');
             $table->enum('status',
-                ['pending','completed','rejected']);
+                ['pending','completed','rejected'])->default('pending');
+            $table->integer('booking_option_id');
             $table->timestamps();
         });
     }

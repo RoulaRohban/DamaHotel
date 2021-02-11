@@ -17,7 +17,6 @@ class CreateBookingOptionsTable extends Migration
             $table->id();
             $table->string('name');
             $table->float('price');
-            $table->integer('booking_id');
             $table->timestamps();
         });
     }

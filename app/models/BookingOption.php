@@ -8,8 +8,8 @@ class BookingOption extends Model
 {
     protected $guarded = ['id','created_at','updated_at'];
 
-    public function booking()
+    public function bookings()
     {
-        return $this->belongsTo(Booking::class);
+        return $this->hasMany(Booking::class);
     }
 }
