@@ -7,8 +7,7 @@
         <div class="col-md-6 col-sm-12">
             <div class="form-box">
                 <h1>Book Now!</h1>
-                <form enctype="multipart/form-data" method="POST" action="{{ route('bookings.store') }}" id="main-form">
-                    @csrf
+                <form id="ajaxform">
                     <div class="form-group">
                         <input class="form-control" id="name" type="text" name="name" placeholder="Full Name"/>
                     </div>
@@ -61,16 +60,13 @@
                                 id="personNumber"
                                 type="number"
                                 name="persons_num"
+                                min="1"
                                 placeholder="Count of persons"
                         />
                     </div>
-                        <div class="form-group">
-                            <button onclick="submitForm('#main-form')" id="submit-button"
-                                    class="btn btn-primary">Save</button>
-                            <button type="reset" onclick=""
-                                    class="btn btn-secondary">Close</button>
-                        </div>
-{{--                    <button class="btn btn-primary btn-lg btn-block" type="submit" >Add Book</button>--}}
+                    <div class="form-group">
+                        <button class="btn btn-success save-data">Save</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -139,9 +135,47 @@
 
 @endsection
 @section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
     <script>
-        function submitForm(id) {
-            $(id).submit();
-        }
+        $(".save-data").click(function(event) {
+            event.preventDefault();
+
+            let name = $('#name').val();
+            let email = $('#email').val();
+            let phone = $('#phone').val();
+            let booking_option_id = $('#booking_option_id').val();
+            let arrival_date = $('#arrival').val();
+            let departure_date = $('#departure').val();
+            let persons_num = $('#personNumber').val();
+            $.ajax({
+                url: "{{ route('bookings.store') }}",
+                type: "POST",
+                data: {
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    booking_option_id: booking_option_id,
+                    arrival_date: arrival_date,
+                    departure_date: departure_date,
+                    persons_num: persons_num,
+                    _token: '{!! csrf_token() !!}'
+                },
+                success: function(response) {
+                    console.log(response);
+                    swal({
+                            title: response.message,
+                            text: response.data,
+                            type: "success",
+                            confirmButtonColor  : "#2d6aff",
+                            confirmButtonText   : "Ok",
+                            allowOutsideClick: false,
+                        },
+                    )
+                .then(function(){
+                        location.reload();
+                    });
+                }
+            })
+        });
     </script>
 @endsection

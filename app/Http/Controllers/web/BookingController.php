@@ -30,7 +30,8 @@ class BookingController extends Controller
         $user->bookings()->save($booking);
         $total_cost = $booking->totalCost($booking->bookingOption->price , $booking->persons_num,$booking->arrival_date,$booking->departure_date);
         $booking->update(['total_cost' => $total_cost]);
+
         DB::commit();
-        return redirect()->route('bookings.create');
+        return response()->json(['message'=>'Added Booking with Cost:','data' => $total_cost]);
     }
 }
