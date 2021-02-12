@@ -21,12 +21,14 @@ class BookingController extends Controller
     }
     public function store(StoreBookingRequest $request)
     {
-        $validated_date = $request->validated();
-        dd($validated_date);
+        $request->validated();
 
         DB::beginTransaction();
-        User::create($request->only('name', 'phone', 'email'));
-        //Booking::create($request->only('arrival_date', 'departure_date', 'persons_num','booking_option_id'));
+
+        $user = User::create($request->only('name', 'phone', 'email'));
+        $booking = Booking::create($request->only('arrival_date', 'departure_date', 'persons_num','booking_option_id'));
+        $user->bookings()->save($booking);
+
         DB::commit();
         return redirect()->route('bookings.create');
     }

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    @include('flash-message')
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-sm-12">
@@ -21,13 +22,11 @@
                         />
                     </div>
                     <div class="form-group">
-                        <input
-                                class="form-control"
+                        <input class="form-control"
                                 id="phone"
-                                type="phone"
+                                type="text"
                                 name="phone"
-                                placeholder="Phone"
-                        />
+                                placeholder="Phone"/>
                     </div>
                     <div class="form-group">
                         <select name="booking_option_id" id="booking_option_id" class="form-control">

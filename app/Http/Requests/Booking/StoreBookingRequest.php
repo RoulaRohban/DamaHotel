@@ -26,7 +26,7 @@ class StoreBookingRequest extends FormRequest
         return [
             'email' => 'required|email|unique:users',
             'name' => 'required|string|min:3|max:200',
-            'phone' => 'required|digits:10',
+            'phone' => 'required|string|min:10',
             'arrival_date' => 'required|date',
             'departure_date' => 'required|date',
             'persons_num' => 'required|integer|min:1',

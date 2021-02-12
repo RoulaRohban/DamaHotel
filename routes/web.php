@@ -20,9 +20,12 @@ Route::get('/', function () {
 
 Route::group( ['namespace' => 'web'], function()
 {
-    //Route::resource('bookings', 'BookingController');
 
 Route::get('/', 'BookingController@create')->name('bookings.create');
-Route::post('/', 'BookingController@store')->name('bookings.store');
+Route::post('/booking',[
+        'uses'=>'BookingController@store',
+        'as'=>'bookings.store',
+
+]);
 
 });
